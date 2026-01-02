@@ -10,4 +10,4 @@ to help visually impaired users detect obstacles.
 - Jumper Wires
 
 ## Working
-- Different vibration patterns indicate obstacle position.
+- Different vibration patterns indicate obstacle position.take a look

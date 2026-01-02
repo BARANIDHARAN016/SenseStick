@@ -10,4 +10,5 @@ to help visually impaired users detect obstacles.
 - Jumper Wires
 
 ## Working
-- Different vibration patterns indicate obstacle position.take a look
+- Different vibration patterns indicate obstacle position.[Take a look](https://www.tinkercad.com/things/iEuEUqrLN2f-sense-stick-prototype?sharecode=Twab9v3oy7of3d7bzcLLFKsEYYJlfJm-vn7nEkjm4Fs)
+

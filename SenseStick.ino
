@@ -1,0 +1,144 @@
+// ---------- Pin Configuration ----------
+
+// Trigger pin of Ultrasonic Sensor 1
+const int trigPin1 = 12; 
+
+// Echo pin of Ultrasonic Sensor 1
+const int echoPin1 = 11; 
+
+// Trigger pin of Ultrasonic Sensor 2
+const int trigPin2 = 7; 
+
+// Echo pin of Ultrasonic Sensor 2
+const int echoPin2 = 6;  
+
+// Pin connected to vibration motor
+const int motorPin = 9;  
+
+// ---------- Setup Function ----------
+void setup() {
+
+  // Set trigger pins as OUTPUT (to send ultrasonic pulse)
+  pinMode(trigPin1, OUTPUT);
+  pinMode(echoPin1, INPUT);
+
+  pinMode(trigPin2, OUTPUT);
+  pinMode(echoPin2, INPUT);
+
+  // Set motor pin as OUTPUT
+  pinMode(motorPin, OUTPUT);
+
+  // Start serial communication to display distance values
+  Serial.begin(9600); 
+}
+
+// ---------- Loop Function ----------
+void loop() {
+
+  // Variables to store time and distance for both sensors
+  long duration1, distance1;
+  long duration2, distance2;
+  
+  // ---------- Ultrasonic Sensor 1 ----------
+  
+  // Ensure trigger pin is LOW
+  digitalWrite(trigPin1, LOW);
+  delayMicroseconds(2);
+
+  // Send 10 microsecond HIGH pulse to trigger sensor
+  digitalWrite(trigPin1, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin1, LOW);
+
+  // Read the echo pin duration
+  duration1 = pulseIn(echoPin1, HIGH);
+
+  // Convert duration to distance (in cm)
+  distance1 = (duration1 / 2) / 29.1;
+
+  // ---------- Ultrasonic Sensor 2 ----------
+  
+  digitalWrite(trigPin2, LOW);
+  delayMicroseconds(2);
+
+  digitalWrite(trigPin2, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin2, LOW);
+
+  duration2 = pulseIn(echoPin2, HIGH);
+  distance2 = (duration2 / 2) / 29.1;
+
+  // ---------- Decision Logic ----------
+  
+  // If both sensors detect object within 20 cm
+  if (distance1 < 20 && distance2 < 20) {
+    vibrationPattern(1);
+  }
+  
+  // If no object is detected by both sensors
+  else if (distance2 >= 20 && distance1 >= 20) {
+    vibrationPattern(2);
+  }
+  
+  // If only sensor 1 detects object
+  else if (distance1 < 20 && distance2 >= 20) {
+    vibrationPattern(3);
+  }
+  
+  // If none of the conditions match, turn motor OFF
+  else {
+    digitalWrite(motorPin, LOW);
+  }
+
+  // ---------- Serial Monitor Output ----------
+  Serial.print("Distance 1: ");
+  Serial.print(distance1);
+  Serial.print(" cm");
+  Serial.print("\t Distance 2: ");
+  Serial.print(distance2);
+  Serial.println(" cm");
+
+  // Delay before next reading
+  delay(100); 
+}
+
+// ---------- Vibration Pattern Function ----------
+void vibrationPattern(int pattern) {
+
+  // Ensure motor starts in OFF state
+  digitalWrite(motorPin, LOW);
+  delay(100);
+
+  switch (pattern) {
+
+    // Pattern 1: Single vibration
+    case 1:
+      for (int i = 0; i < 1; ++i) {
+        digitalWrite(motorPin, HIGH);
+        delay(100);
+        digitalWrite(motorPin, LOW);
+        delay(200);
+      }
+      break;
+
+    // Pattern 2: Two vibrations
+    case 2:
+      for (int i = 0; i < 2; ++i) {
+        digitalWrite(motorPin, HIGH);
+        delay(100);
+        digitalWrite(motorPin, LOW);
+        delay(200);
+      }
+      break;
+    
+    // Pattern 3: Three vibrations
+    case 3:
+      for (int i = 0; i < 3; ++i) {
+        digitalWrite(motorPin, HIGH);
+        delay(100);
+        digitalWrite(motorPin, LOW);
+        delay(200);
+      }
+      break;
+  }
+}
